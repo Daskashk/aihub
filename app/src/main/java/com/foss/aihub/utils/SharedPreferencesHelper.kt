@@ -84,7 +84,6 @@ class SettingsManager(context: Context) {
 
     private fun loadEnabledServices(): Set<String> {
         val json = sharedPref.getString("enabledServices", null)
-        val allServiceIds = aiServices.map { it.id }.toSet()
         return if (json.isNullOrEmpty()) {
             aiServices.map { it.id }.toSet()
         } else {
