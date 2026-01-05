@@ -39,6 +39,8 @@ class MainActivity : ComponentActivity() {
 
         try {
             settingsManager = SettingsManager(this)
+            settingsManager.cleanupAndFixServices()
+
             Log.d("AI_HUB", "SettingsManager initialized")
 
             initializeFileChooserLauncher()

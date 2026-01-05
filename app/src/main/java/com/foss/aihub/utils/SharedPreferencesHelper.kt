@@ -2,6 +2,7 @@ package com.foss.aihub.utils
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.core.content.edit
 import com.foss.aihub.models.AppSettings
 import com.google.gson.Gson
@@ -16,6 +17,41 @@ class SettingsManager(context: Context) {
 
     private val _settingsFlow = MutableStateFlow(loadSettings())
     val settingsFlow: StateFlow<AppSettings> = _settingsFlow
+
+    fun cleanupAndFixServices() {
+        val currentServices = aiServices.map { it.id }.toSet()
+
+        Log.d("AI_HUB", "cleanupAndFixServices - Current: ${currentServices.size} services")
+
+        val lastService = getLastOpenedService()
+        if (lastService != null && lastService !in currentServices) {
+            Log.w("AI_HUB", "Last service '$lastService' removed, clearing")
+            sharedPref.edit { remove("lastOpenedService") }
+        }
+
+        updateSettings { settings ->
+            val removedFromEnabled = settings.enabledServices.filter { it !in currentServices }
+            val removedFromOrder = settings.serviceOrder.filter { it !in currentServices }
+
+            if (removedFromEnabled.isNotEmpty() || removedFromOrder.isNotEmpty()) {
+                Log.d("AI_HUB", "Cleaning removed services - enabled: ${removedFromEnabled.size}, order: ${removedFromOrder.size}")
+            }
+
+            val newEnabled = (settings.enabledServices.filter { it in currentServices }.toSet() + currentServices).toMutableSet()
+            val newOrder = (settings.serviceOrder.filter { it in currentServices } + currentServices.filter { it !in settings.serviceOrder }).toMutableList()
+
+            settings.enabledServices = newEnabled
+            settings.serviceOrder = newOrder
+
+            if (settings.defaultServiceId !in currentServices) {
+                val newDefault = currentServices.firstOrNull() ?: "chatgpt"
+                Log.w("AI_HUB", "Default changed from '${settings.defaultServiceId}' to '$newDefault'")
+                settings.defaultServiceId = newDefault
+            }
+
+            Log.d("AI_HUB", "Completed - enabled: ${settings.enabledServices.size}, order: ${settings.serviceOrder.size}, default: ${settings.defaultServiceId}")
+        }
+    }
 
     fun updateSettings(update: (AppSettings) -> Unit) {
         val current = loadSettings()
@@ -48,6 +84,7 @@ class SettingsManager(context: Context) {
 
     private fun loadEnabledServices(): Set<String> {
         val json = sharedPref.getString("enabledServices", null)
+        val allServiceIds = aiServices.map { it.id }.toSet()
         return if (json.isNullOrEmpty()) {
             aiServices.map { it.id }.toSet()
         } else {
