@@ -1,6 +1,7 @@
 package com.foss.aihub.ui.screens
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +22,7 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
@@ -34,6 +36,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.foss.aihub.MainActivity
 import com.foss.aihub.models.LinkData
 import com.foss.aihub.models.WebViewState
@@ -110,6 +115,49 @@ fun AiHubApp(activity: MainActivity) {
     val loadedServices = remember { mutableStateSetOf<String>() }
 
     var currentRoot by remember { mutableStateOf<FrameLayout?>(null) }
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_PAUSE -> {
+                    webViews.forEach { (_, webView) ->
+                        webView.pauseTimers()
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                            webView.onPause()
+                        }
+                    }
+                    Log.d("AI_HUB", "Paused all WebViews")
+                }
+
+                Lifecycle.Event.ON_RESUME -> {
+                    webViews.forEach { (_, webView) ->
+                        webView.resumeTimers()
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                            webView.onResume()
+                        }
+                    }
+                    Log.d("AI_HUB", "Resumed all WebViews")
+                }
+
+                Lifecycle.Event.ON_DESTROY -> {
+                    webViews.forEach { (_, webView) ->
+                        webView.destroy()
+                    }
+                    webViews.clear()
+                    Log.d("AI_HUB", "Destroyed all WebViews")
+                }
+
+                else -> {}
+            }
+        }
+
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
 
     LaunchedEffect(selectedService.id) {
         Log.d("AI_HUB", "Service switched to: ${selectedService.name} (id: ${selectedService.id})")
@@ -224,22 +272,27 @@ fun AiHubApp(activity: MainActivity) {
                                         showLinkDialog = true
                                     },
                                     onError = { errorCode, description ->
-                                        Log.w("AI_HUB", "→ $errorCode | $description | hide=${errorCode !in 500..599 && ErrorType.shouldShowOverlay(errorCode)}")
+                                        Log.w(
+                                            "AI_HUB", "→ $errorCode | $description | hide=${
+                                                errorCode !in 500..599 && ErrorType.shouldShowOverlay(
+                                                    errorCode
+                                                )
+                                            }"
+                                        )
                                         errorStates[selectedService.id] = errorCode to description
 
                                         val isCriticalError = when {
-                                            errorCode < 0               -> true   // network, ssl, timeout, etc.
-                                            errorCode in 400..499       -> true   // client errors (forbidden, not found...)
-                                            errorCode in 500..599       -> false  // server errors → show server's page
-                                            else                        -> true   // everything else treated as critical
+                                            errorCode < 0 -> true   // network, ssl, timeout, etc.
+                                            errorCode in 400..499 -> true   // client errors (forbidden, not found...)
+                                            errorCode in 500..599 -> false  // server errors → show server's page
+                                            else -> true   // everything else treated as critical
                                         }
 
                                         if (isCriticalError) {
                                             webViewStates[selectedService.id] = WebViewState.ERROR
                                             webViews[selectedService.id]?.visibility = View.GONE
                                         }
-                                    }
-                                )
+                                    })
                                 webViews[selectedService.id] = newWebView
                                 addView(newWebView)
 
@@ -305,15 +358,22 @@ fun AiHubApp(activity: MainActivity) {
                                 onLinkLongPress = { url, title, type ->
                                     selectedLink = LinkData(url, title, type)
                                     showLinkDialog = true
-                                }, onError = { errorCode, description ->
-                                    Log.w("AI_HUB", "→ $errorCode | $description | hide=${errorCode !in 500..599 && ErrorType.shouldShowOverlay(errorCode)}")
+                                },
+                                onError = { errorCode, description ->
+                                    Log.w(
+                                        "AI_HUB", "→ $errorCode | $description | hide=${
+                                            errorCode !in 500..599 && ErrorType.shouldShowOverlay(
+                                                errorCode
+                                            )
+                                        }"
+                                    )
                                     errorStates[selectedService.id] = errorCode to description
 
                                     val isCriticalError = when {
-                                        errorCode < 0               -> true   // network, ssl, timeout, etc.
-                                        errorCode in 400..499       -> true   // client errors (forbidden, not found...)
-                                        errorCode in 500..599       -> false  // server errors → show server's page
-                                        else                        -> true   // everything else treated as critical
+                                        errorCode < 0 -> true   // network, ssl, timeout, etc.
+                                        errorCode in 400..499 -> true   // client errors (forbidden, not found...)
+                                        errorCode in 500..599 -> false  // server errors → show server's page
+                                        else -> true   // everything else treated as critical
                                     }
 
                                     if (isCriticalError) {
@@ -444,7 +504,10 @@ fun AiHubApp(activity: MainActivity) {
             val enabledServices = currentEnabled.filter { it !in previousEnabledServices }
 
             if (disabledServices.isNotEmpty() || enabledServices.isNotEmpty()) {
-                Log.d("AI_HUB", "Enabled services changed: disabled=${disabledServices.size}, enabled=${enabledServices.size}")
+                Log.d(
+                    "AI_HUB",
+                    "Enabled services changed: disabled=${disabledServices.size}, enabled=${enabledServices.size}"
+                )
 
                 if (selectedService.id !in currentEnabled) {
                     val firstEnabled = aiServices.firstOrNull { it.id in currentEnabled }
@@ -472,7 +535,10 @@ fun AiHubApp(activity: MainActivity) {
                     loadedServices.remove(id)
                 }
 
-                Log.d("AI_HUB", "Cleaned up ${toRemove.size} disabled services after returning from settings")
+                Log.d(
+                    "AI_HUB",
+                    "Cleaned up ${toRemove.size} disabled services after returning from settings"
+                )
 
                 previousEnabledServices = currentEnabled
             }
@@ -490,8 +556,7 @@ fun AiHubApp(activity: MainActivity) {
         SettingsScreen(
             onBack = { showSettingsScreen = false; applySettingsToAllWebViews(false) },
             settingsManager = settingsManager,
-            onManageServicesClick = { showManageServices = true }
-        )
+            onManageServicesClick = { showManageServices = true })
     }
 
     if (showManageServices) {
