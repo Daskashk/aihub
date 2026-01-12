@@ -15,6 +15,7 @@ import androidx.compose.material.icons.rounded.IntegrationInstructions
 import androidx.compose.material.icons.rounded.Language
 import androidx.compose.material.icons.rounded.People
 import androidx.compose.material.icons.rounded.PrivacyTip
+import androidx.compose.material.icons.rounded.Psychology
 import androidx.compose.material.icons.rounded.Public
 import androidx.compose.material.icons.rounded.RocketLaunch
 import androidx.compose.material.icons.rounded.SentimentVerySatisfied
@@ -22,7 +23,6 @@ import androidx.compose.material.icons.rounded.Shield
 import androidx.compose.material.icons.rounded.TravelExplore
 import androidx.compose.ui.graphics.Color
 import com.foss.aihub.models.AiService
-import androidx.compose.material.icons.rounded.Psychology
 
 const val USER_AGENT =
     "Mozilla/5.0 (Linux; Android 10; Mobile) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36"
@@ -34,7 +34,7 @@ val aiServices = listOf(
         "https://chatgpt.com/",
         "General Purpose",
         "Versatile conversation assistant",
-        Color(0xFF10A37F)
+        Color(0xFF10A37F) // Green
     ),
     AiService(
         "duck",
@@ -42,7 +42,7 @@ val aiServices = listOf(
         "https://duck.ai/",
         "Privacy First",
         "Anonymous AI conversations",
-        Color(0xFF8B7355)
+        Color(0xFF8B7355) // Brown
     ),
     AiService(
         "venice",
@@ -50,7 +50,7 @@ val aiServices = listOf(
         "https://venice.ai/chat",
         "Creative Arts",
         "Multimedia creative assistant",
-        Color(0xFF9C27B0)
+        Color(0xFF9C27B0) // Purple
     ),
     AiService(
         "grok",
@@ -58,7 +58,7 @@ val aiServices = listOf(
         "https://grok.com/",
         "Entertainment",
         "Witty humorous companion",
-        Color(0xFFE91E63)
+        Color(0xFFE91E63) // Pink
     ),
     AiService(
         "lumo",
@@ -66,7 +66,7 @@ val aiServices = listOf(
         "https://lumo.proton.me/",
         "Secure AI",
         "Encrypted privacy assistant",
-        Color(0xFF2196F3)
+        Color(0xFF2196F3) // Blue
     ),
     AiService(
         "deepseek",
@@ -74,7 +74,7 @@ val aiServices = listOf(
         "https://chat.deepseek.com/",
         "Development",
         "Code generation specialist",
-        Color(0xFF00ACC1)
+        Color(0xFF00ACC1) // Cyan
     ),
     AiService(
         "gemini",
@@ -82,7 +82,7 @@ val aiServices = listOf(
         "https://gemini.google.com/",
         "Multimodal",
         "Google ecosystem integration",
-        Color(0xFF4285F4)
+        Color(0xFF4285F4) // Blue
     ),
     AiService(
         "claude",
@@ -90,7 +90,7 @@ val aiServices = listOf(
         "https://claude.ai/chat",
         "Professional Writing",
         "Long-form content expert",
-        Color(0xFF673AB7)
+        Color(0xFF673AB7) // Purple
     ),
     AiService(
         "perplexity",
@@ -98,7 +98,7 @@ val aiServices = listOf(
         "https://www.perplexity.ai/",
         "Research",
         "Citation-based search engine",
-        Color(0xFF00AB97)
+        Color(0xFF00AB97) // Teal
     ),
     AiService(
         "qwen",
@@ -106,7 +106,7 @@ val aiServices = listOf(
         "https://chat.qwen.ai/",
         "Multilingual",
         "100+ languages support",
-        Color(0xFFFF6D00)
+        Color(0xFFFF6D00) // Orange
     ),
     AiService(
         "mistral",
@@ -114,7 +114,7 @@ val aiServices = listOf(
         "https://chat.mistral.ai/",
         "Efficiency",
         "Fast reasoning model",
-        Color(0xFF3F51B5)
+        Color(0xFF3F51B5) // Indigo
     ),
     AiService(
         "blackbox",
@@ -122,7 +122,7 @@ val aiServices = listOf(
         "https://app.blackbox.ai/",
         "Coding",
         "Code optimization assistant",
-        Color(0xFFFF5722)
+        Color(0xFFFF5722) // Orange
     ),
     AiService(
         "copilot",
@@ -130,7 +130,7 @@ val aiServices = listOf(
         "https://copilot.microsoft.com/",
         "Productivity",
         "Microsoft 365 integration",
-        Color(0xFF0078D4)
+        Color(0xFF0078D4) // Blue
     ),
     AiService(
         "brave",
@@ -138,7 +138,7 @@ val aiServices = listOf(
         "https://search.brave.com/ask",
         "Search",
         "Privacy-focused searching",
-        Color(0xFF198038)
+        Color(0xFF198038) // Green
     ),
     AiService(
         "huggingface",
@@ -146,7 +146,7 @@ val aiServices = listOf(
         "https://huggingface.co/chat",
         "Open Source",
         "Open model experimentation",
-        Color(0xFFFFD600)
+        Color(0xFFFFD600) // Yellow
     ),
     AiService(
         "meta",
@@ -154,7 +154,7 @@ val aiServices = listOf(
         "https://www.meta.ai/",
         "Social",
         "Social platform integration",
-        Color(0xFF0081FB)
+        Color(0xFF0081FB) // Blue
     ),
     AiService(
         "euria",
@@ -162,7 +162,7 @@ val aiServices = listOf(
         "https://euria.infomaniak.com/",
         "Privacy First",
         "Swiss AI assistant",
-        Color(0xFF0D47A1)
+        Color(0xFF0D47A1) // Blue
     ),
     AiService(
         "zai",
@@ -170,7 +170,7 @@ val aiServices = listOf(
         "https://chat.z.ai/",
         "Conversational",
         "Social AI assistant",
-        Color(0xFF8E24AA) // Purple 600
+        Color(0xFF8E24AA) // Purple
     ),
     AiService(
         "h2ogpte",
@@ -178,7 +178,7 @@ val aiServices = listOf(
         "https://h2ogpte.genai.h2o.ai/",
         "Data Science",
         "Enterprise AI platform",
-        Color(0xFF00695C) // Teal 700
+        Color(0xFF00695C) // Teal
     ),
     AiService(
         "dola",
@@ -186,16 +186,16 @@ val aiServices = listOf(
         "https://www.dola.com/chat",
         "General",
         "AI conversation assistant",
-        Color(0xFF009688)
+        Color(0xFF009688) // Teal
     ),
-        AiService(
+    AiService(
         "khoj",
         "Khoj",
         "https://app.khoj.dev/",
         "Productivity",
         "Personal AI assistant",
-        Color(0xFFFF9800) // Orange (Khoj Brand color)
-    )
+        Color(0xFFFF9800) // Orange
+    ),
 )
 
 val serviceIcons = mapOf(
@@ -252,8 +252,7 @@ val serviceDomains = mapOf(
         "grok.com",
 
         // Auth
-        "accounts.x.ai",
-        "auth.grokipedia.com"
+        "accounts.x.ai", "auth.grokipedia.com"
     ),
 
     // Lumo
@@ -334,7 +333,7 @@ val serviceDomains = mapOf(
 
     // Meta
     "meta" to listOf(
-        "www.meta.ai", "static.xx.fbcdn.net", "video.fdel64-1.fna.fbcdn.net"
+        "www.meta.ai", "static.xx.fbcdn.net", "video.fdel64-1.fna.fbcdn.net", "graph.meta.ai"
     ),
 
     // Eurai
@@ -375,13 +374,10 @@ val serviceDomains = mapOf(
         "sf-rc2.yhgfb-static.com",
         "sf-rc.yhgfb-static.com"
     ),
-    
+
     // Khoj
     "khoj" to listOf(
-        "app.khoj.dev",
-        "khoj.dev",
-        "khoj.auth0.com",
-        "cdn.khoj.dev"
+        "app.khoj.dev", "khoj.dev", "khoj.auth0.com", "cdn.khoj.dev"
     )
 )
 
@@ -404,12 +400,25 @@ val alwaysBlockedDomains = mapOf(
 )
 
 val commonAuthDomains = listOf(
+    // Google
     "accounts.google.com",
+
+    // Apple
     "appleid.apple.com",
+    "www.apple.com",
+    "appleid.cdn-apple.com",
+
+    // Microsoft
     "login.live.com",
     "login.microsoftonline.com",
+    "aadcdn.msauth.net",
+    "aadcdn.msftauth.net",
+
+    // Github
     "github.githubassets.com",
-    "challenges.cloudflare.com"
+
+    // Cloudflare
+    "challenges.cloudflare.com",
 )
 
 val TRACKING_PARAMS = setOf(
