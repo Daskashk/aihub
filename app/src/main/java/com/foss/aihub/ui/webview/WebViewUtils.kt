@@ -30,9 +30,9 @@ fun createWebViewForService(
     onError: (Int, String) -> Unit
 ): WebView {
     return WebView(context).apply {
-        CookieManager.getInstance().setAcceptCookie(true)
-        CookieManager.getInstance().setAcceptThirdPartyCookies(this, true)
-        CookieManager.getInstance().flush()
+        val cookieManager = CookieManager.getInstance()
+        cookieManager.setAcceptCookie(true)
+        cookieManager.setAcceptThirdPartyCookies(this, false)
 
         layoutParams = FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
@@ -158,10 +158,6 @@ fun updateWebViewSettings(
         mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
         cacheMode = WebSettings.LOAD_DEFAULT
         userAgentString = USER_AGENT
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            mediaPlaybackRequiresUserGesture = false
-        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             isAlgorithmicDarkeningAllowed = true
