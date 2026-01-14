@@ -1,9 +1,8 @@
 package com.foss.aihub.ui.screens.dialogs
 
-import androidx.compose.animation.AnimatedContent
+import android.content.Intent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
@@ -22,9 +21,13 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Code
+import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
@@ -43,6 +46,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -51,11 +55,11 @@ import androidx.compose.ui.window.DialogProperties
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-
 @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun AboutDialog(onDismiss: () -> Unit) {
     val uriHandler = LocalUriHandler.current
+    val context = LocalContext.current
     var isVisible by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
@@ -70,7 +74,6 @@ fun AboutDialog(onDismiss: () -> Unit) {
                 delay(300)
                 onDismiss()
             }
-            onDismiss()
         }, properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
         AnimatedVisibility(
@@ -95,27 +98,23 @@ fun AboutDialog(onDismiss: () -> Unit) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(28.dp),
+                        .padding(24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-
-                    AnimatedContent(targetState = "About AI Hub") { title ->
-                        Text(
-                            title, style = MaterialTheme.typography.headlineMedium.copy(
-                                fontWeight = FontWeight.Bold, color = colorScheme.primary
-                            )
+                    Text(
+                        "AI Hub", style = MaterialTheme.typography.headlineMedium.copy(
+                            fontWeight = FontWeight.Bold, color = colorScheme.primary
                         )
-                    }
+                    )
 
-                    Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
 
-
-                    Surface(
-                        color = colorScheme.surfaceContainerLow,
-                        shape = RoundedCornerShape(16.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .animateContentSize()
+                    ElevatedCard(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.elevatedCardColors(
+                            containerColor = colorScheme.surfaceContainerLow
+                        ),
+                        shape = RoundedCornerShape(16.dp)
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(
@@ -134,15 +133,14 @@ fun AboutDialog(onDismiss: () -> Unit) {
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
 
-
-                    Surface(
-                        color = colorScheme.primaryContainer.copy(alpha = 0.3f),
-                        shape = RoundedCornerShape(16.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .animateContentSize()
+                    ElevatedCard(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.elevatedCardColors(
+                            containerColor = colorScheme.primaryContainer.copy(alpha = 0.3f)
+                        ),
+                        shape = RoundedCornerShape(16.dp)
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(
@@ -161,41 +159,84 @@ fun AboutDialog(onDismiss: () -> Unit) {
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
 
-
-                    ElevatedButton(
-                        onClick = { uriHandler.openUri("https://github.com/SilentCoderHere") },
-                        colors = ButtonDefaults.elevatedButtonColors(
-                            containerColor = colorScheme.secondaryContainer,
-                            contentColor = colorScheme.onSecondaryContainer
-                        ),
-                        shape = RoundedCornerShape(20.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(52.dp)
-                            .animateContentSize()
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
+                        FilledTonalButton(
+                            onClick = { uriHandler.openUri("https://github.com/SilentCoderHere/aihub") },
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(48.dp),
+                            shape = RoundedCornerShape(16.dp)
                         ) {
-                            Icon(
-                                Icons.Rounded.Code,
-                                contentDescription = "GitHub",
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Spacer(modifier = Modifier.width(12.dp))
-                            Text(
-                                "View on GitHub", style = MaterialTheme.typography.labelLarge.copy(
-                                    fontWeight = FontWeight.SemiBold
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Icon(
+                                    Icons.Rounded.Code,
+                                    contentDescription = "GitHub",
+                                    modifier = Modifier.size(18.dp)
                                 )
-                            )
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text(
+                                    "GitHub", style = MaterialTheme.typography.labelLarge
+                                )
+                            }
+                        }
+
+                        ElevatedButton(
+                            onClick = {
+                                val shareText =
+                                    "Try AI Hub - All AI assistants in one app! Free and open source: https://github.com/SilentCoderHere/aihub/releases/latest"
+
+                                val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                                    type = "text/plain"
+                                    putExtra(Intent.EXTRA_TEXT, shareText)
+                                    putExtra(
+                                        Intent.EXTRA_SUBJECT, "Check out AI Hub!"
+                                    )
+                                }
+
+                                context.startActivity(
+                                    Intent.createChooser(shareIntent, "Share AI Hub")
+                                )
+                            },
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(48.dp),
+                            shape = RoundedCornerShape(16.dp),
+                            colors = ButtonDefaults.elevatedButtonColors()
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Icon(
+                                    Icons.Rounded.Share,
+                                    contentDescription = "Share",
+                                    modifier = Modifier.size(18.dp)
+                                )
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text(
+                                    "Share", style = MaterialTheme.typography.labelLarge
+                                )
+                            }
                         }
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
 
+                    Text(
+                        "Made with ❤️ by Silent Coder",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = colorScheme.onSurfaceVariant
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
 
                     TextButton(
                         onClick = {
