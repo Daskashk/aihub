@@ -32,16 +32,16 @@ val aiServices = listOf(
         "chatgpt",
         "ChatGPT",
         "https://chatgpt.com/",
-        "General Purpose",
-        "Versatile conversation assistant",
+        "Not privacy‑focused",
+        "General-purpose powerful chatbot developed by OpenAI",
         Color(0xFF10A37F) // Green
     ),
     AiService(
         "duck",
         "Duck AI",
         "https://duck.ai/",
-        "Privacy First",
-        "Anonymous AI conversations",
+        "Privacy‑focused",
+        "Chatbot by DuckDuckGo as front-end to knowed provider oriented to privacy under they Privacy Policies",
         Color(0xFF8B7355) // Brown
     ),
     AiService(
