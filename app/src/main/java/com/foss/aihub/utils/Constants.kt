@@ -228,13 +228,12 @@ val serviceDomains = mapOf(
         "chatgpt.com",
         "openai.com",
         "fileserviceuploadsperm.blob.core.windows.net",
-        "cdn.oaistatic.com",
         "oaiusercontent.com",
 
         // Auth
         "cdn.auth0.com",
         "auth.openai.com",
-        "auth-cdn.oaistatic.com"
+        "oaistatic.com"
     ),
 
     // Duck AI
@@ -249,8 +248,7 @@ val serviceDomains = mapOf(
 
     // Grok
     "grok" to listOf(
-        "grok.com",
-        "imagine-public.x.ai",
+        "grok.com", "imagine-public.x.ai",
 
         // Auth
         "accounts.x.ai", "auth.grokipedia.com"
@@ -266,14 +264,12 @@ val serviceDomains = mapOf(
 
     // Deepseek
     "deepseek" to listOf(
-        "chat.deepseek.com", "cdn.deepseek.com", "static.deepseek.com"
+        "deepseek.com"
     ),
 
     // Gemini
     "gemini" to listOf(
-        "gemini.google.com",
-        "fonts.gstatic.com",
-        "www.gstatic.com",
+        "gemini.google.com", "fonts.gstatic.com", "www.gstatic.com"
     ),
 
     // Claude
@@ -283,33 +279,22 @@ val serviceDomains = mapOf(
 
     // Perplexity
     "perplexity" to listOf(
-        "www.perplexity.ai", "pplx-next-static-public.perplexity.ai"
+        "perplexity.ai"
     ),
 
     // Qwen
     "qwen" to listOf(
-        "chat.qwen.ai",
         "qwen.ai",
         "alicdn.com",
         "cdnjs.cloudflare.com",
-        "assets.alicdn.com",
-        "img.alicdn.com",
-        "at.alicdn.com",
-        "d.alicdn.com",
-        "o.alicdn.com",
-        "g.alicdn.com",
-        "aplus.qwen.ai",
         "aliyuncs.com",
         "tdum.alibaba.com",
-        "sg-wum.alibaba.com"
+        "sg-wum.alibaba.com",
     ),
 
     // Mistral
     "mistral" to listOf(
-        "chat.mistral.ai", "mistral.ai", "api.mistral.ai", "console.mistral.ai", "mistralcdn.net",
-
-        // Auth
-        "v2.auth.mistral.ai",
+        "mistral.ai", "mistralcdn.net",
     ),
 
     // Blackbox
@@ -324,7 +309,7 @@ val serviceDomains = mapOf(
 
     // Brave
     "brave" to listOf(
-        "cdn.search.brave.com", "search.brave.com"
+        "brave.com",
     ),
 
     // HuggingFace
@@ -334,19 +319,12 @@ val serviceDomains = mapOf(
 
     // Meta
     "meta" to listOf(
-        "www.meta.ai", "static.xx.fbcdn.net", "video.fdel64-1.fna.fbcdn.net", "graph.meta.ai"
+        "meta.ai", "static.xx.fbcdn.net", "video.fdel64-1.fna.fbcdn.net",
     ),
 
     // Eurai
     "euria" to listOf(
-        "euria.infomaniak.com",
-        "web-components.storage.infomaniak.com",
-        "fonts.storage.infomaniak.com",
-
-        // Auth
-        "welcome.infomaniak.com",
-        "login.infomaniak.com",
-        "login.storage.infomaniak.com"
+        "infomaniak.com",
     ),
 
     // Zai
@@ -364,21 +342,15 @@ val serviceDomains = mapOf(
 
     // Dola
     "dola" to listOf(
-        "www.dola.com",
-        "sf-flow-web-cdn.ciciaicdn.com",
-        "opt-i18n.ciciai.com",
-        "mcs-sg.ciciai.com",
-        "sf-sf-flow-web-cdn-nontt.ciciaicdn.com",
-        "p16-flow-sign-sg.ciciai.com",
-        "vmweb-sg.ciciai.com",
-        "mssdk-i18n-sg.ciciai.com",
-        "sf-rc2.yhgfb-static.com",
-        "sf-rc.yhgfb-static.com"
+        "www.dola.com", "ciciaicdn.com", "ciciai.com", "yhgfb-static.com"
     ),
 
     // Khoj
     "khoj" to listOf(
-        "app.khoj.dev", "khoj.dev", "khoj.auth0.com", "cdn.khoj.dev"
+        "khoj.dev",
+
+        // Auth
+        "khoj.auth0.com"
     )
 )
 
