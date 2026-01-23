@@ -7,9 +7,10 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
-import androidx.compose.foundation.background
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,17 +21,17 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ChatBubbleOutline
 import androidx.compose.material.icons.rounded.Code
 import androidx.compose.material.icons.rounded.Share
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -44,8 +45,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
@@ -71,96 +70,101 @@ fun AboutDialog(onDismiss: () -> Unit) {
         onDismissRequest = {
             isVisible = false
             scope.launch {
-                delay(300)
+                delay(280)
                 onDismiss()
             }
         }, properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
         AnimatedVisibility(
             visible = isVisible,
-            enter = fadeIn() + scaleIn(initialScale = 0.8f),
-            exit = fadeOut() + scaleOut(targetScale = 1.2f)
+            enter = fadeIn() + scaleIn(initialScale = 0.94f),
+            exit = fadeOut() + scaleOut(targetScale = 0.92f)
         ) {
             Surface(
                 modifier = Modifier
-                    .fillMaxWidth(0.9f)
+                    .fillMaxWidth(0.92f)
                     .wrapContentHeight()
-                    .clip(RoundedCornerShape(28.dp))
-                    .shadow(16.dp, RoundedCornerShape(28.dp))
-                    .background(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(
-                                colorScheme.surface, colorScheme.surfaceVariant.copy(alpha = 0.5f)
-                            )
-                        )
-                    ), tonalElevation = 8.dp
+                    .clip(RoundedCornerShape(32.dp)),
+                color = MaterialTheme.colorScheme.surfaceContainerLowest,
+                tonalElevation = 1.dp
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(24.dp),
+                        .padding(horizontal = 24.dp, vertical = 28.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        "AI Hub", style = MaterialTheme.typography.headlineMedium.copy(
-                            fontWeight = FontWeight.Bold, color = colorScheme.primary
-                        )
+                        text = "AI Hub", style = MaterialTheme.typography.headlineMedium.copy(
+                            fontWeight = FontWeight.Bold
+                        ), color = MaterialTheme.colorScheme.primary
                     )
 
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
-                    ElevatedCard(
+                    Text(
+                        text = "Open • Simple • Powerful",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    // Story Card
+                    Card(
                         modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.elevatedCardColors(
-                            containerColor = colorScheme.surfaceContainerLow
-                        ),
-                        shape = RoundedCornerShape(16.dp)
+                        shape = RoundedCornerShape(24.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainer
+                        )
                     ) {
-                        Column(modifier = Modifier.padding(16.dp)) {
+                        Column(modifier = Modifier.padding(20.dp)) {
                             Text(
                                 "The Story Behind AI Hub",
                                 style = MaterialTheme.typography.titleMedium.copy(
                                     fontWeight = FontWeight.SemiBold
                                 ),
-                                color = colorScheme.onSurface
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
-                                "As a FOSS enthusiast, I avoid proprietary AI apps and use these services through their PWAs in the browser instead. But constantly switching between tabs and interfaces became frustrating. So I built AI Hub — a simple, open-source app that brings all these AI assistants together in one clean place, keeping the FOSS spirit while making switching effortless",
+                                "As a FOSS enthusiast, I avoid proprietary AI apps and use these services through their PWAs in the browser. Switching tabs became frustrating — so I built AI Hub: a clean, open-source app that brings all your favorite AI assistants together in one place.",
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = colorScheme.onSurfaceVariant
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                    ElevatedCard(
+                    // Smart Work Card
+                    Card(
                         modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.elevatedCardColors(
-                            containerColor = colorScheme.primaryContainer.copy(alpha = 0.3f)
-                        ),
-                        shape = RoundedCornerShape(16.dp)
+                        shape = RoundedCornerShape(24.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.38f)
+                        )
                     ) {
-                        Column(modifier = Modifier.padding(16.dp)) {
+                        Column(modifier = Modifier.padding(20.dp)) {
                             Text(
                                 "Smart Work > Hard Work",
                                 style = MaterialTheme.typography.titleMedium.copy(
                                     fontWeight = FontWeight.SemiBold
                                 ),
-                                color = colorScheme.primary
+                                color = MaterialTheme.colorScheme.primary
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
-                                "I've used AI to build some parts of this app. Smart work is better than hard work — modern AI tools helped me accelerate development, generate code ideas, and refine features faster.",
+                                "I've used AI tools to accelerate development, generate ideas, and refine features faster. Modern AI helped make this app better and quicker — smart work beats hard work every time.",
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = colorScheme.onPrimaryContainer
+                                color = MaterialTheme.colorScheme.onPrimaryContainer
                             )
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(28.dp))
 
+                    // Compact buttons row
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -169,71 +173,86 @@ fun AboutDialog(onDismiss: () -> Unit) {
                             onClick = { uriHandler.openUri("https://github.com/SilentCoderHere/aihub") },
                             modifier = Modifier
                                 .weight(1f)
-                                .height(48.dp),
-                            shape = RoundedCornerShape(16.dp)
+                                .height(42.dp),
+                            shape = RoundedCornerShape(16.dp),
+                            contentPadding = PaddingValues(horizontal = 12.dp)
                         ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Center
-                            ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
                                 Icon(
                                     Icons.Rounded.Code,
-                                    contentDescription = "GitHub",
+                                    contentDescription = null,
                                     modifier = Modifier.size(18.dp)
                                 )
-                                Spacer(modifier = Modifier.width(6.dp))
-                                Text(
-                                    "GitHub", style = MaterialTheme.typography.labelLarge
-                                )
+                                Spacer(Modifier.width(8.dp))
+                                Text("GitHub", style = MaterialTheme.typography.labelMedium)
                             }
                         }
 
                         ElevatedButton(
                             onClick = {
                                 val shareText =
-                                    "Try AI Hub - All AI assistants in one app! Free and open source: https://github.com/SilentCoderHere/aihub/releases/latest"
-
+                                    "Check out AI Hub — all your favorite AI assistants in one free, open-source app!\n\nhttps://github.com/SilentCoderHere/aihub/releases/latest"
                                 val shareIntent = Intent(Intent.ACTION_SEND).apply {
                                     type = "text/plain"
                                     putExtra(Intent.EXTRA_TEXT, shareText)
-                                    putExtra(
-                                        Intent.EXTRA_SUBJECT, "Check out AI Hub!"
-                                    )
+                                    putExtra(Intent.EXTRA_SUBJECT, "AI Hub - FOSS AI Collection")
                                 }
-
                                 context.startActivity(
-                                    Intent.createChooser(shareIntent, "Share AI Hub")
+                                    Intent.createChooser(
+                                        shareIntent,
+                                        "Share AI Hub"
+                                    )
                                 )
                             },
                             modifier = Modifier
                                 .weight(1f)
-                                .height(48.dp),
+                                .height(42.dp),
                             shape = RoundedCornerShape(16.dp),
-                            colors = ButtonDefaults.elevatedButtonColors()
+                            contentPadding = PaddingValues(horizontal = 12.dp)
                         ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Center
-                            ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
                                 Icon(
                                     Icons.Rounded.Share,
-                                    contentDescription = "Share",
+                                    contentDescription = null,
                                     modifier = Modifier.size(18.dp)
                                 )
-                                Spacer(modifier = Modifier.width(6.dp))
-                                Text(
-                                    "Share", style = MaterialTheme.typography.labelLarge
-                                )
+                                Spacer(Modifier.width(8.dp))
+                                Text("Share", style = MaterialTheme.typography.labelMedium)
                             }
                         }
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
 
+                    OutlinedButton(
+                        onClick = { uriHandler.openUri("https://matrix.to/#/#aihub-silentcoder:matrix.org") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(42.dp),
+                        shape = RoundedCornerShape(16.dp),
+                        contentPadding = PaddingValues(horizontal = 12.dp),
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                Icons.Rounded.ChatBubbleOutline,
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Spacer(Modifier.width(10.dp))
+                            Text(
+                                "Join Matrix Community",
+                                style = MaterialTheme.typography.labelMedium
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
                     Text(
                         "Made with ❤️ by Silent Coder",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -242,12 +261,12 @@ fun AboutDialog(onDismiss: () -> Unit) {
                         onClick = {
                             isVisible = false
                             scope.launch {
-                                delay(300)
+                                delay(280)
                                 onDismiss()
                             }
                         }, modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text("Close", color = colorScheme.primary)
+                        Text("Close", style = MaterialTheme.typography.labelLarge)
                     }
                 }
             }
