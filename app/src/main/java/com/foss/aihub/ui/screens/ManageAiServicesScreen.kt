@@ -66,30 +66,33 @@ fun ManageAiServicesScreen(
     }
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(), topBar = {
-            Md3TopAppBar(
-                title = "Manage AI Services", onBack = onBack
-            )
-        }, containerColor = MaterialTheme.colorScheme.surface
+        modifier = Modifier.fillMaxSize(),
+        topBar = { Md3TopAppBar(title = "Manage AI Services", onBack = onBack) },
+        containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            itemsIndexed(orderedServices, key = { _, service -> service.id }) { index, service ->
+            itemsIndexed(
+                items = orderedServices, key = { _, service -> service.id }) { index, service ->
+
+                val isEnabled = service.id in enabledServices
                 val isDefault = service.id == defaultServiceId
-                val isOnlyEnabled = enabledServices.size == 1 && service.id in enabledServices
+                val isOnlyEnabled = enabledServices.size == 1 && isEnabled
                 val canDisable =
                     if (loadLastAiEnabled) !isOnlyEnabled else !isDefault && !isOnlyEnabled
+
                 val isFirst = index == 0
                 val isLast = index == orderedServices.lastIndex
 
                 AiServiceItem(
                     service = service,
-                    isEnabled = service.id in enabledServices,
+                    isEnabled = isEnabled,
                     canToggle = canDisable,
                     isDefault = isDefault,
                     loadLastAiEnabled = loadLastAiEnabled,
@@ -122,20 +125,27 @@ fun ManageAiServicesScreen(
             item {
                 Spacer(modifier = Modifier.height(32.dp))
 
-                Text(
-                    text = when {
-                        loadLastAiEnabled -> "At least one AI assistant must remain enabled"
-                        else -> "At least one AI assistant must remain enabled • The default cannot be disabled"
-                    },
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    textAlign = TextAlign.Center,
+                Surface(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                )
+                        .padding(horizontal = 8.dp),
+                    shape = RoundedCornerShape(20.dp),
+                    color = MaterialTheme.colorScheme.surfaceContainerLowest,
+                    tonalElevation = 1.dp
+                ) {
+                    Text(
+                        text = when {
+                            loadLastAiEnabled -> "At least one AI assistant must remain enabled"
+                            else -> "At least one AI assistant must remain enabled • The default cannot be disabled"
+                        },
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(24.dp))
             }
         }
     }
@@ -154,40 +164,39 @@ fun AiServiceItem(
     onMoveUp: () -> Unit,
     onMoveDown: () -> Unit
 ) {
+    val accent = service.accentColor
+
     Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = if (isEnabled) service.accentColor.copy(alpha = 0.08f)
-            else MaterialTheme.colorScheme.surfaceContainer
-        ),
-        border = if (!isEnabled) BorderStroke(
-            1.dp,
-            MaterialTheme.colorScheme.outlineVariant
-        ) else null
+        modifier = Modifier.fillMaxWidth(
+        ), shape = RoundedCornerShape(28.dp), colors = CardDefaults.cardColors(
+            containerColor = if (isEnabled) accent.copy(alpha = 0.08f)
+            else MaterialTheme.colorScheme.surfaceContainerLowest
+        ), border = if (!isEnabled) BorderStroke(
+            1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+        )
+        else null
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 16.dp),
+                .padding(horizontal = 20.dp, vertical = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            CompactServiceIcon(service = service, isEnabled = isEnabled)
+            CompactServiceIcon(service, isEnabled)
 
             Column(
                 modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     Text(
                         text = service.name,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Medium,
-                        color = if (isEnabled) MaterialTheme.colorScheme.onSurface
-                        else MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = if (isEnabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.weight(1f)
@@ -201,7 +210,7 @@ fun AiServiceItem(
                 Text(
                     text = service.category,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = if (isEnabled) 1f else 0.7f)
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = if (isEnabled) 0.9f else 0.65f)
                 )
 
                 if (!canToggle && isEnabled) {
@@ -209,7 +218,8 @@ fun AiServiceItem(
                         text = if (isDefault && !loadLastAiEnabled) "Default AI cannot be disabled"
                         else "Last enabled AI cannot be disabled",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.error
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.padding(top = 2.dp)
                     )
                 }
             }
@@ -229,21 +239,20 @@ fun AiServiceItem(
 
 @Composable
 private fun CompactServiceIcon(service: AiService, isEnabled: Boolean) {
+    val accent = service.accentColor
+
     Surface(
-        shape = CircleShape, color = if (isEnabled) {
-            service.accentColor.copy(alpha = 0.12f)
-        } else {
-            MaterialTheme.colorScheme.surfaceContainer
-        }, tonalElevation = 4.dp, modifier = Modifier.size(48.dp)
+        shape = CircleShape,
+        color = if (isEnabled) accent.copy(alpha = 0.12f) else MaterialTheme.colorScheme.surfaceContainer,
+        tonalElevation = if (isEnabled) 6.dp else 1.dp,
+        modifier = Modifier.size(56.dp)
     ) {
-        Box(
-            contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()
-        ) {
+        Box(contentAlignment = Alignment.Center) {
             Icon(
                 imageVector = serviceIcons[service.id] ?: Icons.Rounded.SmartToy,
                 contentDescription = null,
-                tint = if (isEnabled) service.accentColor else service.accentColor.copy(alpha = 0.6f),
-                modifier = Modifier.size(28.dp)
+                tint = if (isEnabled) accent else accent.copy(alpha = 0.55f),
+                modifier = Modifier.size(32.dp)
             )
         }
     }
@@ -255,13 +264,13 @@ private fun DefaultBadge() {
         onClick = {}, label = {
         Text(
             "Default",
-            style = MaterialTheme.typography.labelSmall,
+            style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.SemiBold
         )
     }, colors = AssistChipDefaults.assistChipColors(
         containerColor = MaterialTheme.colorScheme.primaryContainer,
         labelColor = MaterialTheme.colorScheme.onPrimaryContainer
-    ), border = null
+    ), shape = RoundedCornerShape(16.dp), border = null
     )
 }
 
@@ -277,37 +286,40 @@ private fun TrailingControls(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Switch(
             checked = isEnabled,
             onCheckedChange = { if (canToggle || !isEnabled) onToggle(it) },
             enabled = canToggle || !isEnabled,
             colors = SwitchDefaults.colors(
-                checkedTrackColor = MaterialTheme.colorScheme.primary,
-                checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
-                uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant,
-                uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant
+                checkedThumbColor = MaterialTheme.colorScheme.primary,
+                checkedTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.32f),
+                uncheckedThumbColor = MaterialTheme.colorScheme.outline,
+                uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant
             )
         )
 
-        Column(verticalArrangement = Arrangement.spacedBy(0.dp)) {
+        Column {
             IconButton(
-                onClick = onMoveUp, enabled = !isFirst, modifier = Modifier.size(36.dp)
+                onClick = onMoveUp, enabled = !isFirst, modifier = Modifier.size(44.dp)
             ) {
                 Icon(
                     Icons.Rounded.ArrowDropUp,
                     contentDescription = "Move up",
-                    tint = if (!isFirst) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
+                    tint = if (!isFirst) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(28.dp)
                 )
             }
+
             IconButton(
-                onClick = onMoveDown, enabled = !isLast, modifier = Modifier.size(36.dp)
+                onClick = onMoveDown, enabled = !isLast, modifier = Modifier.size(44.dp)
             ) {
                 Icon(
                     Icons.Rounded.ArrowDropDown,
                     contentDescription = "Move down",
-                    tint = if (!isLast) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
+                    tint = if (!isLast) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(28.dp)
                 )
             }
         }
