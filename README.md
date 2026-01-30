@@ -63,7 +63,7 @@
   </div>
   
   <div style="margin-top: 80px; text-align: center; font-size: 0.8em; color: #555;">
-    ⚠️ F-Droid version is outdated because this <a href="https://github.com/SilentCoderHere/aihub/issues">issue</a> uses GitHub release to update the app until we solve this issue.
+    ⚠️ F-Droid version is outdated because this <a href="https://github.com/SilentCoderHere/aihub/issues/13">issue</a> uses GitHub release to update the app until we solve this issue.
   </div>
 
 </div>
